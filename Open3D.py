@@ -26,12 +26,12 @@ def serialConfig(configFileName):
     # Open the serial ports for the configuration and the data ports
     
     # UNIX (run `ls /dev | grep ACM` to get device names)
-    CLIport = serial.Serial('/dev/ttyACM2', 115200)
-    Dataport = serial.Serial('/dev/ttyACM3', 921600)
+    # CLIport = serial.Serial('/dev/ttyACM2', 115200)
+    # Dataport = serial.Serial('/dev/ttyACM3', 921600)
     
     # Windows
-    #CLIport = serial.Serial('COM3', 115200)
-    #Dataport = serial.Serial('COM4', 921600)
+    CLIport = serial.Serial('COM7', 115200)
+    Dataport = serial.Serial('COM6', 921600)
 
     # Read the configuration file and send it to the board
     config = [line.rstrip('\r\n') for line in open(configFileName)]
@@ -326,6 +326,8 @@ configParameters = parseConfigFile(configFileName)
 detObj = {}  
 frameData = {}    
 currentIndex = 0
+# plot = o3d.visualization.Visualizer()
+# plot.create_window()
 while True:
     try:
         # Update the data and check if the data is okay
@@ -339,6 +341,9 @@ while True:
             pcd = o3d.geometry.PointCloud()
             pcd.points = o3d.utility.Vector3dVector(xyz.T)
             o3d.io.write_point_cloud("./data.ply", pcd)
+            # plot.add_geometry([pcd])
+            # plot.update_geometry([pcd])
+            # plot.update_renderer()
             o3d.visualization.draw_geometries([pcd])
 
             currentIndex += 1
@@ -350,12 +355,6 @@ while True:
         CLIport.write(('sensorStop\n').encode())
         CLIport.close()
         Dataport.close()
-        win.close()
+        # win.close()
         break
         
-    
-
-
-
-
-
