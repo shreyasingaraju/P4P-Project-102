@@ -290,7 +290,7 @@ def update():
     dataOk, frameNumber, detObj = readAndParseData14xx(Dataport, configParameters)
     
     # if dataOk and len(detObj["x"]) > 0:
-    print(detObj)
+    # print(detObj)
     #     x = -detObj["x"]
     #     y = detObj["y"]
         
@@ -326,29 +326,39 @@ configParameters = parseConfigFile(configFileName)
 detObj = {}  
 frameData = {}    
 currentIndex = 0
-# plot = o3d.visualization.Visualizer()
-# plot.create_window()
+
+#Initialise Open3D Plot
+xyz = np.random.rand(100, 3)
+# all_data = np.zeros(10000,3)
+pcd = o3d.geometry.PointCloud()
+pcd.points = o3d.utility.Vector3dVector(xyz)
+
+plot = o3d.visualization.Visualizer()
+plot.create_window()
+plot.add_geometry(pcd)
+
 while True:
     try:
         # Update the data and check if the data is okay
         dataOk = update()
         
-        if dataOk:
+        if dataOk and currentIndex < 50:
             # Store the current frame into frameData
             frameData[currentIndex] = detObj
             # Pass numpy array to Open3D.o3d.geometry.PointCloud and visualize
             xyz = np.array([frameData[currentIndex]["x"], frameData[currentIndex]["y"], frameData[currentIndex]["z"]])
-            pcd = o3d.geometry.PointCloud()
+            # all_data = np.vstack(all_data, xyz)
+        
+
             pcd.points = o3d.utility.Vector3dVector(xyz.T)
-            o3d.io.write_point_cloud("./data.ply", pcd)
-            # plot.add_geometry([pcd])
-            # plot.update_geometry([pcd])
-            # plot.update_renderer()
-            o3d.visualization.draw_geometries([pcd])
+            plot.update_geometry(pcd)
+            plot.poll_events()
+            plot.update_renderer()
+
 
             currentIndex += 1
         
-        time.sleep(0.033) # Sampling frequency of 30 Hz
+        time.sleep(0.05) # Sampling frequency of 30 Hz
         
     # Stop the program and close everything if Ctrl + c is pressed
     except KeyboardInterrupt:
