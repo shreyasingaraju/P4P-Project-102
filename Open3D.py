@@ -284,22 +284,31 @@ def update():
      
     dataOk = 0
     global detObj
+
+    global xData, yData, zData
+
+    global allData
+
     x = []
     y = []
+    z = []
       
     # Read and parse the received data
     dataOk, frameNumber, detObj = readAndParseData14xx(Dataport, configParameters)
     
     if dataOk and len(detObj["x"]) > 0:
     # print(detObj)
-    #     x = -detObj["x"]
-    #     y = detObj["y"]
-        
+        x = -detObj["x"]
+        y = detObj["y"]
+        z = detObj["z"]
+        xData = np.append(xData, x)
+        yData = np.append(yData, y)
+        zData = np.append(zData, z)
     #     s.setData(x,y)
     #     QtGui.QApplication.processEvents()
 
-        xyz = np.array([detObj["x"], detObj["y"], detObj["z"]])
-
+        # xyz = np.array([detObj["x"], detObj["y"], detObj["z"]])
+        xyz = np.array([xData, yData, zData])
         pcd.points = o3d.utility.Vector3dVector(xyz.T)
         plot.update_geometry(pcd)
         plot.poll_events()
@@ -309,6 +318,10 @@ def update():
 
 
 # -------------------------    MAIN   -----------------------------------------  
+
+xData = []
+yData = []
+zData = []
 
 # Configurate the serial port
 CLIport, Dataport = serialConfig(configFileName)
