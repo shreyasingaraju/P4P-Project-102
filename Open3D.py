@@ -2,7 +2,9 @@ import serial
 import time
 import numpy as np
 import pyqtgraph as pg
+import csv
 from pyqtgraph.Qt import QtGui
+import open3d as o3d
 
 # Change the configuration file name
 configFileName = '1443config.cfg'
@@ -23,9 +25,9 @@ def serialConfig(configFileName):
     global Dataport
     # Open the serial ports for the configuration and the data ports
     
-    # Raspberry pi
-    #CLIport = serial.Serial('/dev/ttyACM0', 115200)
-    #Dataport = serial.Serial('/dev/ttyACM1', 921600)
+    # UNIX (run `ls /dev | grep ACM` to get device names)
+    # CLIport = serial.Serial('/dev/ttyACM2', 115200)
+    # Dataport = serial.Serial('/dev/ttyACM3', 921600)
     
     # Windows
     CLIport = serial.Serial('COM7', 115200)
@@ -98,6 +100,7 @@ def parseConfigFile(configFileName):
 # Funtion to read and parse the incoming data
 def readAndParseData14xx(Dataport, configParameters):
     global byteBuffer, byteBufferLength
+    print(byteBufferLength)
     
     # Constants
     OBJ_STRUCT_SIZE_BYTES = 12;
@@ -227,7 +230,7 @@ def readAndParseData14xx(Dataport, configParameters):
                     idX += 2
                     peakVal[objectNum] = np.matmul(byteBuffer[idX:idX+2],word)
                     idX += 2
-                    x[objectNum] = np.matmul(byteBuffer[idX:idX+2],word)
+                    x[objectNum] = np.matmul(byteBuffer [idX:idX+2],word)
                     idX += 2
                     y[objectNum] = np.matmul(byteBuffer[idX:idX+2],word)
                     idX += 2
@@ -248,8 +251,15 @@ def readAndParseData14xx(Dataport, configParameters):
                 # Store the data in the detObj dictionary
                 detObj = {"numObj": tlv_numObj, "rangeIdx": rangeIdx, "range": rangeVal, "dopplerIdx": dopplerIdx, \
                           "doppler": dopplerVal, "peakVal": peakVal, "x": x, "y": y, "z": z}
+                          
                 
-                dataOK = 1             
+                dataOK = 1    
+                
+                # sensorFields = ['numObj', 'rangeIdx', 'range', 'dopplerIdx', 'doppler', 'peakVal', 'x', 'y', 'z']
+                # with open('data1.csv', 'a') as csvFile:
+                    # csvWriter = csv.writer(csvFile)
+                    # csvWriter.writerow(sensorFields) # write header
+                    # csvFile.write("%s\n" % (detObj["x"]))
         
   
         # Remove already processed data
@@ -274,84 +284,88 @@ def update():
      
     dataOk = 0
     global detObj
-    global xData, yData, zData
-
-    global allData
-    
     x = []
     y = []
-    z = []
       
     # Read and parse the received data
     dataOk, frameNumber, detObj = readAndParseData14xx(Dataport, configParameters)
     
     if dataOk and len(detObj["x"]) > 0:
-        # print(detObj)
-        x = -detObj["x"]
-        y = detObj["y"]
-        z = detObj["z"]
-        xData = np.append(xData, x)
-        yData = np.append(yData, y)
-        zData = np.append(zData, z)
+    # print(detObj)
+    #     x = -detObj["x"]
+    #     y = detObj["y"]
+        
+    #     s.setData(x,y)
+    #     QtGui.QApplication.processEvents()
 
-        # xyz = np.array([x, y, z])
-        # if (initData == 0):
-        #     allData = xyz
-        #     initData = 1
-        # else:
-        #     allData = np.vstack((allData, xyz))
-            
-        print("xyz")
-        print(xData, "\n")
-        s.setData(xData,yData)
-        QtGui.QApplication.processEvents()
+        xyz = np.array([detObj["x"], detObj["y"], detObj["z"]])
+
+        pcd.points = o3d.utility.Vector3dVector(xyz.T)
+        plot.update_geometry(pcd)
+        plot.poll_events()
+        plot.update_renderer()
+    
     return dataOk
 
 
-# -------------------------    MAIN   ----------------------------------------- 
-xData = []
-yData = []
-zData = []
+# -------------------------    MAIN   -----------------------------------------  
+
 # Configurate the serial port
 CLIport, Dataport = serialConfig(configFileName)
 
 # Get the configuration parameters from the configuration file
 configParameters = parseConfigFile(configFileName)
 
-# START QtAPPfor the plot
-app = QtGui.QApplication([])
+# # START QtAPPfor the plot
+# app = QtGui.QApplication([])
 
-# Set the plot 
-pg.setConfigOption('background','w')
-win = pg.GraphicsWindow(title="2D scatter plot")
-p = win.addPlot()
-p.setXRange(-0.5,0.5)
-p.setYRange(0,1.5)
-p.setLabel('left',text = 'Y position (m)')
-p.setLabel('bottom', text= 'X position (m)')
-s = p.plot([],[],pen=None,symbol='o')
+# # Set the plot 
+# pg.setConfigOption('background','w')
+# win = pg.GraphicsWindow(title="2D scatter plot")
+# p = win.addPlot()
+# p.setXRange(-2,2)
+# p.setYRange(0,2.5)
+# p.setLabel('left',text = 'Y position (m)')
+# p.setLabel('bottom', text= 'X position (m)')
+# s = p.plot([],[],pen=None,symbol='o')
     
    
 # Main loop 
 detObj = {}  
 frameData = {}    
 currentIndex = 0
+
+#Initialise Open3D Plot
+xyz = np.random.rand(100, 3)
+# all_data = np.zeros(10000,3)
+pcd = o3d.geometry.PointCloud()
+pcd.points = o3d.utility.Vector3dVector(xyz)
+
+plot = o3d.visualization.Visualizer()
+plot.create_window()
+plot.add_geometry(pcd)
+
 while True:
     try:
         # Update the data and check if the data is okay
         dataOk = update()
-        
+
         if dataOk:
             # Store the current frame into frameData
             frameData[currentIndex] = detObj
+            # Pass numpy array to Open3D.o3d.geometry.PointCloud and visualize
+            
+            # all_data = np.vstack(all_data, xyz)
+        
             currentIndex += 1
         
-        time.sleep(0.01) # Sampling frequency of 30 Hz
+        time.sleep(0.05) # Sampling frequency of 30 Hz
         
     # Stop the program and close everything if Ctrl + c is pressed
     except KeyboardInterrupt:
         CLIport.write(('sensorStop\n').encode())
         CLIport.close()
         Dataport.close()
-        win.close()
+        # win.close()
         break
+        
