@@ -285,17 +285,17 @@ def update():
     dataOk = 0
     global detObj
 
-    global xData, yData, zData
+    # global xData, yData, zData
 
-    global allData
+    # global allData
 
     x = []
     y = []
     z = []
 
-    xBuff = []
-    yBuff = []
-    xBuff = []
+    # xBuff = []
+    # yBuff = []
+    # xBuff = []
 
     # Read and parse the received data
     dataOk, frameNumber, detObj = readAndParseData14xx(Dataport, configParameters)
@@ -306,32 +306,32 @@ def update():
         y = detObj["y"]
         z = detObj["z"]
         
-        if (len(xData) < 1000):
-            xData = np.append(xData, x)
-            yData = np.append(yData, y)
-            zData = np.append(zData, z)
-        else:
-            print("Reached 1000 points")
-            xBuff = np.roll(xData, -1) #rotate right
-            xBuff = np.delete(xBuff, -1)
-            xBuff = np.append(xBuff, x)
-            xData = xBuff
+        # if (len(xData) < 1000):
+        #     xData = np.append(xData, x)
+        #     yData = np.append(yData, y)
+        #     zData = np.append(zData, z)
+        # else:
+        #     print("Reached 1000 points")
+        #     xBuff = np.roll(xData, -1) #rotate right
+        #     xBuff = np.delete(xBuff, -1)
+        #     xBuff = np.append(xBuff, x)
+        #     xData = xBuff
 
-            yBuff = np.roll(yData, -1) #rotate right
-            yBuff = np.delete(yBuff, -1)
-            yBuff = np.append(yBuff, y)
-            yData = yBuff
+        #     yBuff = np.roll(yData, -1) #rotate right
+        #     yBuff = np.delete(yBuff, -1)
+        #     yBuff = np.append(yBuff, y)
+        #     yData = yBuff
 
-            zBuff = np.roll(zData, -1) #rotate right
-            zBuff = np.delete(zBuff, -1)
-            zBuff = np.append(zBuff, z)
-            zData = zBuff
+        #     zBuff = np.roll(zData, -1) #rotate right
+        #     zBuff = np.delete(zBuff, -1)
+        #     zBuff = np.append(zBuff, z)
+        #     zData = zBuff
 
     #     s.setData(x,y)
     #     QtGui.QApplication.processEvents()
 
-        xyz = np.array([detObj["x"], detObj["y"], detObj["z"]])
-        
+        xyz = np.array([x, y, z])
+        print(xyz)
         # xyz = np.array([xData, yData, zData])
         # pcd.points = o3d.utility.Vector3dVector(xyz.T)
         pcd.points = o3d.utility.Vector3dVector(xyz.T)
@@ -345,9 +345,9 @@ def update():
 
 # -------------------------    MAIN   -----------------------------------------  
 
-xData = []
-yData = []
-zData = []
+# xData = []
+# yData = []
+# zData = []
 
 # Configurate the serial port
 CLIport, Dataport = serialConfig(configFileName)
@@ -384,6 +384,10 @@ plot = o3d.visualization.Visualizer()
 plot.create_window()
 plot.add_geometry(pcd)
 
+writeHeader = 1
+
+
+
 while True:
     try:
         # Update the data and check if the data is okay
@@ -395,7 +399,32 @@ while True:
             # Pass numpy array to Open3D.o3d.geometry.PointCloud and visualize
             
             # all_data = np.vstack(all_data, xyz)
-        
+
+            xFrame = frameData[currentIndex]["x"]
+            yFrame = frameData[currentIndex]["y"]
+            zFrame = frameData[currentIndex]["z"]
+
+            # with open('framedata.csv', "w") as f:
+            #     f.write("\n".join(" ".join(map(str, x)) for x in (xFrame,yFrame,zFrame)))
+
+            frameData = [currentIndex, xFrame, yFrame, zFrame]
+
+            sensorFields = ['frame', 'x', 'y', 'z']
+
+            with open('data1.csv', 'a', newline = '') as csvFile:
+                csvWriter = csv.writer(csvFile)
+                if (writeHeader == 1):
+                    csvWriter.writerow(sensorFields) # write header
+                    writeHeader = 0
+                csvWriter.writerow(frameData)
+
+                # csvFile.write("%s\n" % (currentIndex))
+                # csvFile.write("%s\n" % (xFrame))
+                # csvFile.write("%s\n" % (yFrame))
+                # csvFile.write("%s\n" % (zFrame))
+
+                # csvWriter.writerows(frameData)
+
             currentIndex += 1
         
         time.sleep(0.05) # Sampling frequency of 30 Hz
