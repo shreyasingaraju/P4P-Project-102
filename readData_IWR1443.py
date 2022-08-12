@@ -289,9 +289,9 @@ def update():
 
     # global allData
 
-    x = []
-    y = []
-    z = []
+    # x = []
+    # y = []
+    # z = []
 
     # xBuff = []
     # yBuff = []
@@ -330,14 +330,14 @@ def update():
     #     s.setData(x,y)
     #     QtGui.QApplication.processEvents()
 
-        xyz = np.array([x, y, z])
-        print(xyz)
+        # xyz = np.array([x, y, z])
+        # print(xyz)
         # xyz = np.array([xData, yData, zData])
         # pcd.points = o3d.utility.Vector3dVector(xyz.T)
-        pcd.points = o3d.utility.Vector3dVector(xyz.T)
-        plot.update_geometry(pcd)
-        plot.poll_events()
-        plot.update_renderer()
+        # pcd.points = o3d.utility.Vector3dVector(xyz.T)
+        # plot.update_geometry(pcd)
+        # plot.poll_events()
+        # plot.update_renderer()
              
     
     return dataOk
@@ -375,14 +375,14 @@ frameData = {}
 currentIndex = 0
 
 #Initialise Open3D Plot
-xyz = np.random.rand(100, 3)
-# all_data = np.zeros(10000,3)
-pcd = o3d.geometry.PointCloud()
-pcd.points = o3d.utility.Vector3dVector(xyz)
+# xyz = np.random.rand(100, 3)
+# # all_data = np.zeros(10000,3)
+# pcd = o3d.geometry.PointCloud()
+# pcd.points = o3d.utility.Vector3dVector(xyz)
 
-plot = o3d.visualization.Visualizer()
-plot.create_window()
-plot.add_geometry(pcd)
+# plot = o3d.visualization.Visualizer()
+# plot.create_window()
+# plot.add_geometry(pcd)
 
 writeHeader = 1
 
@@ -407,23 +407,18 @@ while True:
             # with open('framedata.csv', "w") as f:
             #     f.write("\n".join(" ".join(map(str, x)) for x in (xFrame,yFrame,zFrame)))
 
-            frameData = [currentIndex, xFrame, yFrame, zFrame]
+            allData = [currentIndex, xFrame, yFrame, zFrame]
 
             sensorFields = ['frame', 'x', 'y', 'z']
 
-            with open('data1.csv', 'a', newline = '') as csvFile:
+            print (allData)
+
+            with open('data.csv', 'a', newline = '') as csvFile:
                 csvWriter = csv.writer(csvFile)
                 if (writeHeader == 1):
                     csvWriter.writerow(sensorFields) # write header
                     writeHeader = 0
-                csvWriter.writerow(frameData)
-
-                # csvFile.write("%s\n" % (currentIndex))
-                # csvFile.write("%s\n" % (xFrame))
-                # csvFile.write("%s\n" % (yFrame))
-                # csvFile.write("%s\n" % (zFrame))
-
-                # csvWriter.writerows(frameData)
+                csvWriter.writerow(allData)
 
             currentIndex += 1
         
