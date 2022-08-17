@@ -3,60 +3,44 @@ clear;
 clc;
 close all;
 
+% Read data and variables
 opts = detectImportOptions("straightLine.txt");
-opts.SelectedVariableNames = {'x'};
-xData = readtable("straightLine.txt", opts);
-xData = table2array(xData);
-count = 1;
+opts.SelectedVariableNames = {'x', 'y', 'z'};
+data = readtable("straightLine.txt", opts);
+data = table2array(data);
 
 % Erase weird characters from string before processing
-xData = erase(xData, newline);
-xData = erase(xData, char(13)); % Carriage return
+data = erase(data, newline);
+data = erase(data, char(13)); % Carriage return
 
-% yData = erase(yData, newline);
-% yData = erase(yData, char(13)); % Carriage return
-% 
-% zData = erase(zData, newline);
-% zData = erase(zData, char(13)); % Carriage return
+% Sorting data by columns into different vectors
+xData = data(:, 1);
+yData = data(:, 2);
+zData = data(:, 3);
 
 xOutData = [];
-yOutdata = [];
+yOutData = [];
 zOutData = [];
 
-% This is for getting all data, but we want to only combine 10 frames or so
+% This is for getting all data, but we want to only combine 30 frames
 % for i=1:height(xData)
 for i=1:30
     xOutData = [xOutData str2num(xData{i})];
+    yOutData = [yOutData str2num(yData{i})];
+    zOutData = [zOutData str2num(zData{i})];
 end
 
 xOutData = xOutData';
+yOutData = yOutData';
+zOutData = zOutData';
 
 
-% % Convert this data into .mat file
-% x = [-0.0332 -0.21094 -0.06445 0.003906	0.003906; 
-%     -0.04883 -0.2207 -0.0332 -0.22461 0.005859; 
-%     0.052734 -0.21094 -0.04883 -0.13281 0.003906; 
-%     -0.2793 -0.0332 -0.06445 -0.44531 0.003906; 
-%     -0.2207 -0.04883 0.003906 0.003906 -0.12891];
-% 
-% y = [0.037109 0.71875 0.105469 0.134766 0.125;
-%     0.054688 0.658203 0.048828 0.532356	0.171875;
-%     0.417969 0.716797 0.070313 0.181641 0.085938;
-%     0.542567 0.058594 0.080078 0.361328 0.128906;
-%     0.667969 0.087891 0.087891 0.080078 0.128906];
-% 
-% z = [0.080078 0.011719 0.142578 -0.04297 -0.06445;
-%     0.119141 0.111328 0.074219 -0.39844 -0.07617;
-%     -0.0332 0.072266 0.111328 -0.41211 -0.03906;
-%     -0.42578 0.066406 0.15625 -0.48242 -0.05469;
-%     0.035156 0.097656 -0.03516 -0.04688 -0.04102];
-% 
 % pClouds = n-by-3 array
-% pClouds = [x;y;z];
-% 
-% % Parameters For Point Cloud Registration Algorithm
-% % We should update these parameters by experimenting with mmWave Sensor
-% 
+pClouds = [xOutData yOutData zOutData];
+
+% Parameters For Point Cloud Registration Algorithm
+% We should update these parameters by experimenting with mmWave Sensor
+
 % maxRange = 20;
 % 
 % referenceVector = [0 0 1];
