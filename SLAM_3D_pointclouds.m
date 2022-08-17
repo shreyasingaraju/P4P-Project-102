@@ -3,10 +3,12 @@ clear;
 clc;
 close all;
 
+filename = "straightLine.txt";
+
 % Read data and variables
-opts = detectImportOptions("straightLine.txt");
+opts = detectImportOptions(filename);
 opts.SelectedVariableNames = {'x', 'y', 'z'};
-data = readtable("straightLine.txt", opts);
+data = readtable(filename, opts);
 data = table2array(data);
 
 % Erase weird characters from string before processing
@@ -47,12 +49,12 @@ end
 maxRange = 20;
 
 referenceVector = [0 0 1];
-maxDistance = 0.05;
+maxDistance = 0.5;
 maxAngularDistance = 15;
 
 randomSampleRatio = 0.25;
 
-gridStep = 0.5;
+gridStep = 2.5;
 distanceMovedThreshold = 0.3;
 
 % Parameters For Loop Closure Estimation Algorithm
@@ -66,7 +68,7 @@ annularRegionLimits = [-0.75 0.75];
 
 rmseThreshold = 0.26;
 
-loopClosureThreshold = 150;
+loopClosureThreshold = 100;
 optimizationInterval = 2;
 
 % Initialize Variables
