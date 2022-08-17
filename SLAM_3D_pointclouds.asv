@@ -25,16 +25,14 @@ yOutData = [];
 zOutData = [];
 pClouds = {};
 
-frames = int32(40);
-
 % This is for getting all data, but we want to only combine 30 frames
 % for i=1:height(xData)
 for i=1:height(data)
     xOutData = [xOutData str2num(xData{i})];
     yOutData = [yOutData str2num(yData{i})];
     zOutData = [zOutData str2num(zData{i})];
-    if (mod(i, frames) == 0)
-        pClouds{int32(i)/frames} = [xOutData', yOutData', zOutData'];
+    if (mod(i, 40) == 0)
+        pClouds{int32(i)/int32(40)} = [xOutData', yOutData', zOutData'];
         xOutData = [];
         yOutData = [];
         zOutData = [];
@@ -51,13 +49,13 @@ end
 maxRange = 2.7;
 
 referenceVector = [0 0 1];
-maxDistance = 0.1;
+maxDistance = 0.05687;
 maxAngularDistance = 15;
 
 randomSampleRatio = 0.25;
 
 gridStep = 2.5;
-distanceMovedThreshold = 0.05;
+distanceMovedThreshold = 0.3;
 
 % Parameters For Loop Closure Estimation Algorithm
 
@@ -87,7 +85,7 @@ mapUpdated = false;
 scanAccepted = 0;
 
 % 3D Occupancy grid object for creating and visualizing 3D map
-mapResolution = 40; % cells per meter
+mapResolution = 8; % cells per meter
 omap = occupancyMap3D(mapResolution);
 
 pcProcessed = cell(1,length(pClouds));
@@ -99,7 +97,7 @@ pcsToView = cell(1,length(pClouds));
 % Set to 1 to visualize created map and posegraph during build process
 viewMap = 1; 
 % Set to 1 to visualize processed point clouds during build process
-viewPC = 1;
+viewPC = 0;
 
 rng(0);
 
@@ -111,7 +109,7 @@ end
 % If you want to view the created map and posegraph during build process
 if viewMap==1
     ax = newplot; % Figure axis handle
-    view(10,15);
+    view(20,50);
     grid on;
 end
 
@@ -271,5 +269,3 @@ for i=1:length(pClouds)
         prevTform = tform;
     end
 end
-
-set(gca, 'Color', 'k')
