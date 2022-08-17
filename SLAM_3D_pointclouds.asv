@@ -3,8 +3,8 @@ clear;
 clc;
 close all;
 
-opts = detectImportOptions("straightLine.txt");
-opts.SelectedVariableNames = {'x'};
+x = detectImportOptions("straightLine.txt");
+x.SelectedVariableNames = {'x'};
 xData = readtable("straightLine.txt", opts);
 xData = table2array(xData);
 count = 1;
@@ -13,11 +13,11 @@ count = 1;
 xData = erase(xData, newline);
 xData = erase(xData, char(13)); % Carriage return
 
-% yData = erase(yData, newline);
-% yData = erase(yData, char(13)); % Carriage return
-% 
-% zData = erase(zData, newline);
-% zData = erase(zData, char(13)); % Carriage return
+yData = erase(xData, newline);
+yData = erase(xData, char(13)); % Carriage return
+
+zData = erase(xData, newline);
+zData = erase(xData, char(13)); % Carriage return
 
 xOutData = [];
 yOutdata = [];
