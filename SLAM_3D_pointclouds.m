@@ -2,8 +2,9 @@
 clear;
 clc;
 close all;
+addpath('C:\Program Files\MATLAB\R2022a\examples\nav\main');
 
-filename = "./Sensor Data/25-08-2022/staightLineToEnd3.txt";
+filename = "./Sensor Data/30-08-2022/straightLineToEnd2.txt";
 % Read data and variables
 opts = detectImportOptions(filename);
 opts.SelectedVariableNames = {'x', 'y', 'z'};
