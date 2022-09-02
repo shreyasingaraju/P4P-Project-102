@@ -3,8 +3,7 @@ clear;
 clc;
 close all;
 
-filename = "straightLine.txt";
-
+filename = "./Sensor Data/25-08-2022/staightLineToEnd3.txt";
 % Read data and variables
 opts = detectImportOptions(filename);
 opts.SelectedVariableNames = {'x', 'y', 'z'};
@@ -25,7 +24,7 @@ yOutData = [];
 zOutData = [];
 pClouds = {};
 
-frames = int32(40);
+frames = height(data);
 
 % This is for getting all data, but we want to only combine 30 frames
 % for i=1:height(xData)
