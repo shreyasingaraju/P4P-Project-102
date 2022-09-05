@@ -1,0 +1,162 @@
+mmwDemo:/>% ***************************************************************
+Skipped
+
+mmwDemo:/>% Created for SDK ver:02.01
+Skipped
+
+mmwDemo:/>% Created using Visualizer ver:2.1.0.3
+Skipped
+
+mmwDemo:/>% Frequency:77
+Skipped
+
+mmwDemo:/>% Platform:xWR14xx
+Skipped
+
+mmwDemo:/>% Scene Classifier:best_range_res
+Skipped
+
+mmwDemo:/>% Azimuth Resolution(deg):15 + Elevation
+Skipped
+
+mmwDemo:/>% Range Resolution(m):0.04
+Skipped
+
+mmwDemo:/>% Maximum unambiguous Range(m):8.19
+Skipped
+
+mmwDemo:/>% Maximum Radial Velocity(m/s):2.67
+Skipped
+
+mmwDemo:/>% Radial velocity resolution(m/s):0.34
+Skipped
+
+mmwDemo:/>% Frame Duration(msec):66.667
+Skipped
+
+mmwDemo:/>% Range Detection Threshold (dB):10
+Skipped
+
+mmwDemo:/>% Range Peak Grouping:enabled
+Skipped
+
+mmwDemo:/>% Doppler Peak Grouping:enabled
+Skipped
+
+mmwDemo:/>% Static clutter removal:disabled
+Skipped
+
+mmwDemo:/>% ***************************************************************
+Skipped
+
+mmwDemo:/>sensorStop
+Done
+
+mmwDemo:/>flushCfg
+Done
+
+mmwDemo:/>dfeDataOutputMode 1
+Done
+
+mmwDemo:/>channelCfg 15 7 0
+Done
+
+mmwDemo:/>adcCfg 2 1
+Done
+
+mmwDemo:/>adcbufCfg 0 1 0 1
+Done
+
+mmwDemo:/>profileCfg 0 77 7 7 114.29 0 0 35 1 240 2257 0 0 30
+Done
+
+mmwDemo:/>chirpCfg 0 0 0 0 0 0 0 1
+Done
+
+mmwDemo:/>chirpCfg 1 1 0 0 0 0 0 4
+Done
+
+mmwDemo:/>chirpCfg 2 2 0 0 0 0 0 2
+Done
+
+mmwDemo:/>frameCfg 0 2 16 0 66.667 1 0
+Done
+
+mmwDemo:/>lowPower 0 1
+Done
+
+mmwDemo:/>guiMonitor 1 1 0 0 0 1
+Done
+
+mmwDemo:/>cfarCfg 0 2 8 4 3 0 1280
+Done
+
+mmwDemo:/>peakGrouping 1 1 1 1 229
+Done
+
+mmwDemo:/>multiObjBeamForming 1 0.5
+Done
+
+mmwDemo:/>clutterRemoval 0
+Done
+
+mmwDemo:/>calibDcRangeSig 0 -5 8 256
+Done
+
+mmwDemo:/>compRangeBiasAndRxChanPhase 0.0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+Done
+
+mmwDemo:/>measureRangeBiasAndRxChanPhase 0 1.5 0.2
+Done
+
+mmwDemo:/>CQRxSatMonitor 0 3 11 121 0
+Done
+
+mmwDemo:/>CQSigImgMonitor 0 119 4
+Done
+
+mmwDemo:/>analogMonitor 1 1
+Done
+
+mmwDemo:/>sensorStart
+Debug: Init Calibration Status = 0x7fe
+
+Done
+
+mmwDemo:/>cfarCfg 0 2 8 4 3 0 1622
+Done
+
+mmwDemo:/>clutterRemoval 1
+Done
+
+mmwDemo:/>peakGrouping 1 0 1 1 229
+Done
+
+mmwDemo:/>peakGrouping 1 0 0 1 229
+Done
+
+mmwDemo:/>clutterRemoval 0
+Done
+
+mmwDemo:/>clutterRemoval 1
+Done
+
+mmwDemo:/>clutterRemoval 0
+Done
+
+mmwDemo:/>peakGrouping 1 0 1 1 229
+Done
+
+mmwDemo:/>peakGrouping 1 0 0 1 229
+Done
+
+mmwDemo:/>peakGrouping 1 1 0 1 229
+Done
+
+mmwDemo:/>peakGrouping 1 0 0 1 229
+Done
+
+mmwDemo:/>cfarCfg 0 2 8 4 3 0 854
+Done
+
+q
