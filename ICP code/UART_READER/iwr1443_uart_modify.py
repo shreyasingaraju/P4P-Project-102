@@ -280,15 +280,15 @@ def Radar_READ_DATA(serial):
 
 def Main():
     # open the port
-    ser = TTY_INIT("COM6", 115200)
+    ser = TTY_INIT("COM7", 115200)
 
     # config
     Radar_INIT(ser)
     Radar_START(ser)
     
-    ser = TTY_INIT("COM5", 921600)
+    ser = TTY_INIT("COM6", 921600)
     Radar_READ_DATA(ser)
-    ser = TTY_INIT("COM6", 115200)
+    ser = TTY_INIT("COM7", 115200)
     Radar_STOP(ser)
 
 

@@ -18,7 +18,7 @@ clear;
 
 format long g
 % The input file
-load('..\path')
+load('./ICP code/UART_READER/StraightLine_1.mat')
 
 
 
