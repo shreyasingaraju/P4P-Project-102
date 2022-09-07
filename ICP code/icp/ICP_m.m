@@ -18,7 +18,7 @@ clear;
 
 format long g
 % The input file
-load('./ICP code/UART_READER/StraightLine_1.mat')
+load('../UART_READER/Data (short room)/StraightLine_3.mat')
 
 
 
@@ -251,12 +251,12 @@ clc;
 clear;
 
 % Rotation and translation matrix
-load('.\data\U\R_matrix.txt');
-load('.\data\U\T_matrix.txt');
+load('.\output\R_matrix.txt');
+load('.\output\T_matrix.txt');
 % point cloud data indormation
-load('.\data\U\cor_matrix.txt');
-load('.\data\U\frame.txt');
-load('.\data\U\frameC.txt');
+load('.\output\cor_matrix.txt');
+load('.\output\frame.txt');
+load('.\output\frameC.txt');
 
 new_matrix = cor_matrix;
 
