@@ -16,6 +16,7 @@
 clc;
 clear;
 close all;
+addpath('../../ICP code/icp/function');
 
 format long g
 % The input file
@@ -30,7 +31,7 @@ MAX_RANGE =9;
 %Minimum range of the data, any point within the distance will be filtered
 MIN_RANGE = 0.75;
 % Number of frame that be merged
-mergedF = 30;
+mergedF = 10;
 % K number of the nearest neighbors algorithm. Points that have the number
 % of neighbor less than 10% of the average will be filtered when K = 'A;
 K = 'A';
