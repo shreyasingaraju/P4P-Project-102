@@ -15,10 +15,11 @@
 
 clc;
 clear;
+close all;
 
 format long g
 % The input file
-load('../UART_READER/Data (short room)/StraightLine_3.mat')
+load('../UART_READER/Data (short room)/StraightLine_1.mat')
 
 
 
@@ -29,7 +30,7 @@ MAX_RANGE =9;
 %Minimum range of the data, any point within the distance will be filtered
 MIN_RANGE = 0.75;
 % Number of frame that be merged
-mergedF = 5;
+mergedF = 30;
 % K number of the nearest neighbors algorithm. Points that have the number
 % of neighbor less than 10% of the average will be filtered when K = 'A;
 K = 'A';
@@ -251,8 +252,9 @@ clc;
 clear;
 
 % Rotation and translation matrix
-load('.\output\R_matrix.txt');
+load('.\output\cor_matrix.txt');
 load('.\output\T_matrix.txt');
+load('.\output\R_matrix.txt');
 % point cloud data indormation
 load('.\output\cor_matrix.txt');
 load('.\output\frame.txt');
