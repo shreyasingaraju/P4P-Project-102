@@ -4,7 +4,7 @@ clc;
 close all;
 addpath('C:\Program Files\MATLAB\R2022a\examples\nav\main');
 
-filename = "./Sensor Data/30-08-2022/straightLineMiddle1.txt";
+filename = "./Sensor Data/11-08-2022/UShape.csv";
 % Read data and variables
 opts = detectImportOptions(filename);
 opts.SelectedVariableNames = {'x', 'y', 'z'};
@@ -25,7 +25,13 @@ yOutData = [];
 zOutData = [];
 pClouds = {};
 
-frames = height(data);
+% Best overall plot
+%frames = height(data);
+
+% Shows a pose
+%frames = 20;
+
+frames = 30;
 
 % This is for getting all data, but we want to only combine 30 frames
 % for i=1:height(xData)
@@ -48,7 +54,7 @@ end
 % Parameters For Point Cloud Registration Algorithm
 % We should update these parameters by experimenting with mmWave Sensor
 
-maxRange = 2.7;
+maxRange = 2.41;
 
 referenceVector = [0 0 1];
 maxDistance = 0.1;
@@ -56,7 +62,7 @@ maxAngularDistance = 15;
 
 randomSampleRatio = 0.25;
 
-gridStep = 2.5;
+gridStep = 1;
 distanceMovedThreshold = 0.05;
 
 % Parameters For Loop Closure Estimation Algorithm
@@ -87,7 +93,7 @@ mapUpdated = false;
 scanAccepted = 0;
 
 % 3D Occupancy grid object for creating and visualizing 3D map
-mapResolution = 40; % cells per meter
+mapResolution = 50; % cells per meter
 omap = occupancyMap3D(mapResolution);
 
 pcProcessed = cell(1,length(pClouds));
@@ -123,6 +129,7 @@ disp('Estimating robot trajectory...');
 
 for i=1:length(pClouds)
     % Read point clouds in sequence
+    disp('Read point clouds in sequence');
     pc = pClouds{i};
 
     ind = (-maxRange < pc(:,1) & pc(:,1) < maxRange ...
@@ -142,19 +149,23 @@ for i=1:length(pClouds)
     
     if viewPC==1
         % Visualize down sampled point cloud
+        disp('Visualize down sampled point cloud');
         view(pplayer,pcl_wogrd_sampled);
-        pause(0.001)
+        pause(0.5)
     end    
 
     
     if count == 0
-        % First can
+        % First scan
+        disp('First scan');
         tform = [];
         scanAccepted = 1;
     else
         if count == 1
+            disp('Count = 1');
             tform = pcregisterndt(pcl_wogrd_sampled,prevPc,gridStep);
         else
+            disp('Count > 1');
             tform = pcregisterndt(pcl_wogrd_sampled,prevPc,gridStep,...
                 'InitialTransform',prevTform);
         end
@@ -164,12 +175,15 @@ for i=1:length(pClouds)
         if sqrt(norm(relPose(1:3))) > distanceMovedThreshold
             addRelativePose(pGraph,relPose);
             scanAccepted = 1;
+            disp('Scan accepted');
         else
             scanAccepted = 0;
+            disp('Scan NOT accepted');
         end
     end
  
     if scanAccepted == 1
+        disp('First scan accepted, increment count');
         count = count + 1;
         
         pcProcessed{count} = pcl_wogrd_sampled;
@@ -178,12 +192,14 @@ for i=1:length(pClouds)
         
         % Submaps are created for faster loop closure query. 
         if rem(count,nScansPerSubmap)==0
+            disp('Creating submaps');
             submaps{count/nScansPerSubmap} = exampleHelperCreateSubmap(mmWaveScans2d,...
                 pGraph,count,nScansPerSubmap,maxRange);
         end
         
         % loopSubmapIds contains matching submap ids if any otherwise empty.   
         if (floor(count/nScansPerSubmap)>subMapThresh)
+            disp('Matching submaps ID');
             [loopSubmapIds,~] = exampleHelperEstimateLoopCandidates(pGraph,...
                 count,submaps,mmWaveScans2d{count},nScansPerSubmap,...
                 loopClosureSearchRadius,loopClosureThreshold,subMapThresh);
@@ -225,6 +241,7 @@ for i=1:length(pClouds)
 
         if (numLoopClosuresSinceLastOptimization == optimizationInterval)||...
                 ((numLoopClosuresSinceLastOptimization>0)&&(i==length(pClouds)))
+            disp('Optimization Interval');
             if loopClosureSearchRadius ~=1
                 disp('Doing Pose Graph Optimization to reduce drift.');
             end
@@ -253,11 +270,13 @@ for i=1:length(pClouds)
         
         if viewMap==1
             % Insert point cloud to the occupance map in the right position
+            disp('Insert point cloud to the occupance map in the right position');
             position = pGraph.nodes(count);
             insertPointCloud(omap,position,pcToView.removeInvalidPoints,maxRange);
             
             if (rem(count-1,15)==0)||mapUpdated
                 exampleHelperVisualizeMapAndPoseGraph(omap, pGraph, ax);
+                disp('Map updated with helper function exampleHelperVisualizeMapAndPoseGraph');
             end
             mapUpdated = false;
         else
