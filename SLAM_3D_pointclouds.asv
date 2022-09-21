@@ -4,7 +4,7 @@ clc;
 close all;
 addpath('C:\Program Files\MATLAB\R2022a\examples\nav\main');
 
-filename = "./Sensor Data/30-08-2022/straightLineMiddle3";
+filename = "./Sensor Data/11-08-2022/LShape.csv";
 % Read data and variables
 opts = detectImportOptions(filename);
 opts.SelectedVariableNames = {'x', 'y', 'z'};
@@ -31,7 +31,7 @@ pClouds = {};
 % Shows a pose
 %frames = 20;
 
-frames = 15;
+frames = 20;
 
 % This is for getting all data, but we want to only combine 30 frames
 % for i=1:height(xData)
@@ -54,7 +54,7 @@ end
 % Parameters For Point Cloud Registration Algorithm
 % We should update these parameters by experimenting with mmWave Sensor
 
-maxRange = 8.19;
+maxRange = 2.41;
 
 referenceVector = [0 0 1];
 maxDistance = 0.1;
@@ -62,7 +62,7 @@ maxAngularDistance = 15;
 
 randomSampleRatio = 0.25;
 
-gridStep = 2;
+gridStep = 1;
 distanceMovedThreshold = 0.05;
 
 % Parameters For Loop Closure Estimation Algorithm
@@ -275,7 +275,7 @@ for i=1:length(pClouds)
             insertPointCloud(omap,position,pcToView.removeInvalidPoints,maxRange);
             
             if (rem(count-1,15)==0)||mapUpdated
-                helperVisualizeMapAndPoseGraph(omap, pGraph, ax);
+                exampleHelperVisualizeMapAndPoseGraph(omap, pGraph, ax);
                 disp('Map updated with helper function exampleHelperVisualizeMapAndPoseGraph');
             end
             mapUpdated = false;
@@ -291,4 +291,4 @@ for i=1:length(pClouds)
     end
 end
 
-set(gca, 'Color', 'w')
+set(gca, 'Color', 'k')
