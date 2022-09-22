@@ -4,7 +4,7 @@ clc;
 close all;
 addpath('C:\Program Files\MATLAB\R2022a\examples\nav\main');
 
-filename = "./Sensor Data/30-08-2022/straightLineMiddle3";
+filename = "../Sensor data/PC data/Data (short room)/ShortRoomStraightLine_1.txt";
 % Read data and variables
 opts = detectImportOptions(filename);
 opts.SelectedVariableNames = {'x', 'y', 'z'};
