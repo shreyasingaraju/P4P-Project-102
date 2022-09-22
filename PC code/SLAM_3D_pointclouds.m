@@ -2,9 +2,9 @@
 clear;
 clc;
 close all;
-addpath('C:\Program Files\MATLAB\R2022a\examples\nav\main');
+% addpath('C:\Program Files\MATLAB\R2022a\examples\nav\main');
 
-filename = "../Sensor data/PC data/Data (short room)/ShortRoomStraightLine_1.txt";
+filename = "../Sensor data/PC data/Data (short room)/ShortRoomStraightLine_2.txt";
 % Read data and variables
 opts = detectImportOptions(filename);
 opts.SelectedVariableNames = {'x', 'y', 'z'};
@@ -45,7 +45,6 @@ for i=1:height(data)
         yOutData = [];
         zOutData = [];
     end
-
     
 end
 
@@ -188,19 +187,19 @@ for i=1:length(pClouds)
         
         pcProcessed{count} = pcl_wogrd_sampled;
         
-        mmWaveScans2d{count} = exampleHelperCreate2DScan(pcl_wogrd_sampled);
+        mmWaveScans2d{count} = helperCreate2DScan(pcl_wogrd_sampled);
         
         % Submaps are created for faster loop closure query. 
         if rem(count,nScansPerSubmap)==0
             disp('Creating submaps');
-            submaps{count/nScansPerSubmap} = exampleHelperCreateSubmap(mmWaveScans2d,...
+            submaps{count/nScansPerSubmap} = helperCreateSubmap(mmWaveScans2d,...
                 pGraph,count,nScansPerSubmap,maxRange);
         end
         
         % loopSubmapIds contains matching submap ids if any otherwise empty.   
         if (floor(count/nScansPerSubmap)>subMapThresh)
             disp('Matching submaps ID');
-            [loopSubmapIds,~] = exampleHelperEstimateLoopCandidates(pGraph,...
+            [loopSubmapIds,~] = helperEstimateLoopCandidates(pGraph,...
                 count,submaps,mmWaveScans2d{count},nScansPerSubmap,...
                 loopClosureSearchRadius,loopClosureThreshold,subMapThresh);
             
@@ -276,7 +275,7 @@ for i=1:length(pClouds)
             
             if (rem(count-1,15)==0)||mapUpdated
                 helperVisualizeMapAndPoseGraph(omap, pGraph, ax);
-                disp('Map updated with helper function exampleHelperVisualizeMapAndPoseGraph');
+                disp('Map updated with helper function helperVisualizeMapAndPoseGraph');
             end
             mapUpdated = false;
         else

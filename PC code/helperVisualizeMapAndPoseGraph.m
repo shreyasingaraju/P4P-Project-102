@@ -4,6 +4,8 @@ function helperVisualizeMapAndPoseGraph(omap, pGraph, ax)
 
 %   Copyright 2019 The MathWorks, Inc.
 
+disp("Using helperVisualizeMapAndPoseGraph.m");
+
 show(omap,'Parent',ax);
 hold on;
 pGraph.show('Parent',ax,"IDs","off");
