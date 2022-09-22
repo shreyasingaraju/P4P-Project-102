@@ -20,7 +20,7 @@ addpath('../../ICP code/icp/function');
 
 format long g
 % The input filed
-load('../UART_READER/Data (long room)/LongRoomSlow_1.mat')
+load('../../Sensor data/ICP data/Data (long room)/LongRoomSlow_1.mat')
 
 
 
