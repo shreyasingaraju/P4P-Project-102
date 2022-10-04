@@ -13,8 +13,8 @@ function [loopSubmapIds,loopScores] = helperEstimateLoopCandidates(pGraph,curren
 
 disp("Using helperEstimateLoopCandidates.m");
 
-loopClosureMaxAttempts = 8; % Number of submaps checked
-maxLoopClosureCandidates = 2; % Number of matches to send back, if matches are found
+loopClosureMaxAttempts = 10; % Number of submaps checked
+maxLoopClosureCandidates = 5; % Number of matches to send back, if matches are found
 
 %% Initialize variables
 

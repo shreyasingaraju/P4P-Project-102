@@ -4,7 +4,7 @@ clc;
 close all;
 % addpath('C:\Program Files\MATLAB\R2022a\examples\nav\main');
 
-filename = "../Sensor data/PC data/Data (short room)/ShortRoomStraightLine_2.txt";
+filename = "../Sensor data/PC data/Data (short room)/ShortRoomLShape_3.csv";
 % Read data and variables
 opts = detectImportOptions(filename);
 opts.SelectedVariableNames = {'x', 'y', 'z'};
@@ -25,13 +25,12 @@ yOutData = [];
 zOutData = [];
 pClouds = {};
 
+
 % Best overall plot
 % frames = height(data);
 
 % Shows a pose
-%frames = 20;
-
-frames = 15;
+frames = 20;
 
 % This is for getting all data, but we want to only combine 30 frames
 % for i=1:height(xData)
@@ -59,23 +58,23 @@ referenceVector = [0 0 1];
 maxDistance = 0.1;
 maxAngularDistance = 15;
 
-randomSampleRatio = 0.25;
+randomSampleRatio = 1;
 
-gridStep = 2;
-distanceMovedThreshold = 0.05;
+gridStep = 5;
+distanceMovedThreshold = 0.01;
 
 % Parameters For Loop Closure Estimation Algorithm
 
-loopClosureSearchRadius = 3;
+loopClosureSearchRadius = 0.01;
 
-nScansPerSubmap = 3;
-subMapThresh = 50;
+nScansPerSubmap = 1;
+subMapThresh = 10;
 
 annularRegionLimits = [-0.75 0.75];
 
-rmseThreshold = 0.26;
+rmseThreshold = 5;
 
-loopClosureThreshold = 100;
+loopClosureThreshold = 50;
 optimizationInterval = 2;
 
 % Initialize Variables
@@ -110,7 +109,7 @@ rng(0);
 
 % If you want to view the point clouds while processing them sequentially
 if viewPC==1
-    pplayer = pcplayer([-50 50],[-50 50],[-10 10],'MarkerSize',10);
+    pplayer = pcplayer([-10 10],[-10 10],[-10 10],'MarkerSize',10);
 end
 
 % If you want to view the created map and posegraph during build process
@@ -182,7 +181,7 @@ for i=1:length(pClouds)
     end
  
     if scanAccepted == 1
-        disp('First scan accepted, increment count');
+        disp('Scan accepted, increment count');
         count = count + 1;
         
         pcProcessed{count} = pcl_wogrd_sampled;
@@ -205,7 +204,7 @@ for i=1:length(pClouds)
             
             if ~isempty(loopSubmapIds)
                 rmseMin = inf;
-                
+                disp('Estimate best match to the current scan');
                 % Estimate best match to the current scan
                 for k = 1:length(loopSubmapIds)
                     % For every scan within the submap
@@ -227,6 +226,7 @@ for i=1:length(pClouds)
                 
                 % Check if loop candidate is valid
                 if rmseMin < rmseThreshold
+                    disp('Check if loop candidate is valid');
                     % loop closure constraint
                     relPose = [tform2trvec(loopTform.T') tform2quat(loopTform.T')];
                     
@@ -273,7 +273,7 @@ for i=1:length(pClouds)
             position = pGraph.nodes(count);
             insertPointCloud(omap,position,pcToView.removeInvalidPoints,maxRange);
             
-            if (rem(count-1,15)==0)||mapUpdated
+            if (rem(count-1,3)==0)||mapUpdated
                 helperVisualizeMapAndPoseGraph(omap, pGraph, ax);
                 disp('Map updated with helper function helperVisualizeMapAndPoseGraph');
             end
