@@ -20,7 +20,7 @@ addpath('../../ICP code/icp/function');
 
 format long g
 % The input filed
-load('../../Sensor data/ICP data/Data (long room)/LongRoomSlow_1.mat')
+load('../../Sensor data/ICP data/Data (short room)/UShape_1.mat')
 
 
 
@@ -36,7 +36,7 @@ mergedF = 10;
 % of neighbor less than 10% of the average will be filtered when K = 'A;
 K = 'A';
 % range of k nearest neighbors algorithm   5
-threshold  = 5;
+threshold  = 10;
 % when 1 ICP algorithm 1 will be selected
 % when 2 ICP algorithm 2 will be selected
 ICPSELECT = 2;
