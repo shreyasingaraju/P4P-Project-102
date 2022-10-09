@@ -60,8 +60,13 @@ maxAngularDistance = 15;
 
 randomSampleRatio = 1;
 
+% L shape
 gridStep = 5;
 distanceMovedThreshold = 0.01;
+
+% Straight line
+% gridStep = 2;
+% distanceMovedThreshold = 0.5;
 
 % Parameters For Loop Closure Estimation Algorithm
 
