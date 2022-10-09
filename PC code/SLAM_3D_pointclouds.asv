@@ -60,13 +60,7 @@ maxAngularDistance = 15;
 
 randomSampleRatio = 1;
 
-% U shape
-gridStep = 5;
-distanceMovedThreshold = 0.01;
 
-% L shape
-% gridStep = 5;
-% distanceMovedThreshold = 0.01;
 
 % Straight line
 % gridStep = 2;
