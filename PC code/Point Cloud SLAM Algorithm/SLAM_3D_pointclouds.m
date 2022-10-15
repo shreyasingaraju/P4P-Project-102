@@ -2,9 +2,9 @@
 clear;
 clc;
 close all;
-% addpath('C:\Program Files\MATLAB\R2022a\examples\nav\main');
 
-filename = "../Sensor data/PC data/Data (short room)/ShortRoomUShape_1.csv";
+% Load and format data 
+filename = "../../Sensor data/PC data/Data (short room)/ShortRoomStraightLine_1.csv";
 % Read data and variables
 opts = detectImportOptions(filename);
 opts.SelectedVariableNames = {'x', 'y', 'z'};
@@ -25,15 +25,10 @@ yOutData = [];
 zOutData = [];
 pClouds = {};
 
-
-% Best overall plot
-% frames = height(data);
-
-% Shows a pose
+% Set the number of frames to merge
 frames = 20;
 
-% This is for getting all data, but we want to only combine 30 frames
-% for i=1:height(xData)
+% Loop through data and combine set number of frames
 for i=1:height(data)
     xOutData = [xOutData str2num(xData{i})];
     yOutData = [yOutData str2num(yData{i})];
@@ -52,25 +47,27 @@ end
 % Parameters For Point Cloud Registration Algorithm
 % We should update these parameters by experimenting with mmWave Sensor
 
-maxRange = 8.19;
+maxRange = 8.19; % Modified parameter
 
 referenceVector = [0 0 1];
-maxDistance = 0.1;
+maxDistance = 0.1; % Modified parameter
 maxAngularDistance = 15;
 
-randomSampleRatio = 1;
+randomSampleRatio = 1; % Modified parameter
 
-% U shape
-gridStep = 5;
-distanceMovedThreshold = 0.01;
+% The following parameters have been modified for each motion
+
+% Straight line
+gridStep = 2;
+distanceMovedThreshold = 0.5;
 
 % L shape
 % gridStep = 5;
 % distanceMovedThreshold = 0.01;
 
-% Straight line
-% gridStep = 2;
-% distanceMovedThreshold = 0.5;
+% U shape
+% gridStep = 5;
+% distanceMovedThreshold = 0.01;
 
 % Parameters For Loop Closure Estimation Algorithm
 
@@ -273,7 +270,7 @@ for i=1:length(pClouds)
             optimizationInterval = optimizationInterval*7;
         end 
 
-        pcToView = pcdownsample(pcl_wogrd_sampled, 'random', 0.5);
+        pcToView = pcdownsample(pcl_wogrd_sampled, 'random', 1);
         pcsToView{count} = pcToView;
         
         if viewMap==1
@@ -282,14 +279,15 @@ for i=1:length(pClouds)
             position = pGraph.nodes(count);
             insertPointCloud(omap,position,pcToView.removeInvalidPoints,maxRange);
             
-            if (rem(count-1,3)==0)||mapUpdated
+            if (rem(count-1,1)==0)||mapUpdated
                 helperVisualizeMapAndPoseGraph(omap, pGraph, ax);
                 disp('Map updated with helper function helperVisualizeMapAndPoseGraph');
             end
             mapUpdated = false;
         else
             % Give feedback to know that example is running
-            if (rem(count-1,15)==0)
+            disp('Give feedback to know that example is running');
+            if (rem(count-1,1)==0)
                 fprintf('.');
             end
         end
