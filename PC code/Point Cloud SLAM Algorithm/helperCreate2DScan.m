@@ -16,6 +16,7 @@ annularSamplingRatio = 0.1; % Ratio used to sample extracted  3D point cloud ann
 % Use only a subset of the points randomly sampled, since we will have too
 % many points if not
 ptCloudDownSampled = pcdownsample(ptCloud, 'random', annularSamplingRatio);
+% ptCloudDownSampled = pcdownsample(ptCloud, 'gridAverage', 0.1);
 loc = ptCloudDownSampled.Location;
 
 % Get the cartesian co-ordinates of the accepted points
