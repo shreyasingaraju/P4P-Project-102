@@ -12,7 +12,7 @@ pGraph.show('Parent',ax,"IDs","off");
 xlim([-10 10]);
 ylim([-10 10]);
 zlim([-10 10]);
-view([10,10]);
+view([0,90]);
 drawnow
 hold off;
 grid on;

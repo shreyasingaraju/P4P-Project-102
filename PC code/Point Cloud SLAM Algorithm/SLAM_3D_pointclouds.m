@@ -4,7 +4,7 @@ clc;
 close all;
 
 % Load and format data 
-filename = "../../Sensor data/PC data/Data (short room)/ShortRoomStraightLine_1.csv";
+filename = "../../Sensor data/PC data/Data (IE room)/PCIEStraightLine_1.csv";
 % Read data and variables
 opts = detectImportOptions(filename);
 opts.SelectedVariableNames = {'x', 'y', 'z'};
@@ -27,7 +27,6 @@ pClouds = {};
 
 % Set the number of frames to merge
 frames = 20;
-
 % Loop through data and combine set number of frames
 for i=1:height(data)
     xOutData = [xOutData str2num(xData{i})];
