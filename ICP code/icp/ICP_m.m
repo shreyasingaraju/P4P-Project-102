@@ -20,7 +20,17 @@ addpath('../../ICP code/icp/function');
 
 format long g
 % The input filed
-load('../../Sensor data/ICP data/Data (short room)/UShape_1.mat')
+% Threshold 10
+% load('../../Sensor data/ICP data/Data (short room)/straightLine_1.mat')
+
+% Threshold 5
+% load('../../Sensor data/ICP data/Data (short room)/LShape_1.mat')
+% load('../../Sensor data/ICP data/Data (short room)/UShape_1.mat')
+
+% Threshold 5
+% load('../../Sensor data/ICP data/Data (IE room)/ICPIEStraightLine_3.mat')
+% load('../../Sensor data/ICP data/Data (IE room)/ICPIELShape_1.mat')
+load('../../Sensor data/ICP data/Data (IE room)/ICPIEUShape_1.mat')
 
 
 
@@ -31,12 +41,12 @@ MAX_RANGE =9;
 %Minimum range of the data, any point within the distance will be filtered
 MIN_RANGE = 0.75;
 % Number of frame that be merged
-mergedF = 10;
+mergedF = 45;
 % K number of the nearest neighbors algorithm. Points that have the number
 % of neighbor less than 10% of the average will be filtered when K = 'A;
 K = 'A';
 % range of k nearest neighbors algorithm   5
-threshold  = 10;
+threshold  = 5;
 % when 1 ICP algorithm 1 will be selected
 % when 2 ICP algorithm 2 will be selected
 ICPSELECT = 2;
@@ -282,16 +292,25 @@ pre_data = data;
 position = zeros(3,length(T_matrix)+1);
 
 % Set up the measured value for the inner wall, outer wall, and path.
-x = 0:0.01:8.8;
+
+% Path
+x = 0:0.01:3.62; % IE room rize
+% x = 0:0.01:8.8; % 401 corridor size
+
 ref_size = length(x);
 ref = zeros(2,ref_size*3);
 
-x = 1:0.01:7.8;
-ref_size = length(x);
+% Inner wall
+x = 0.87:0.01:2.75; % IE room rize
+% x = 1:0.01:7.8; % 401 corridor size
+
+ref_size = length(x); 
 inw = zeros(2,ref_size*3);
 
+% Outer wall
+x = -0.87:0.01:4.49; % IE room rize
+% x = -1:0.01:9.8; % 401 corridor size
 
-x = -1:0.01:9.8;
 ref_size = length(x);
 ouw = zeros(2,ref_size*3);
 
@@ -300,60 +319,60 @@ flage =  1;
 flage1 =  1;
 flage2 =  1;
 for i = 1:4
-    for j = 0:0.01:8.8
+    for j = 0:0.01:3.62
         if i == 1
            ref(2,flage) = j;
            flage = flage + 1;
         elseif i == 2 
             ref(1,flage) = j;
-            ref(2,flage) = 8.8;
+            ref(2,flage) = 3.62;
             flage = flage + 1;
         elseif i ==3
-            ref(1,flage) = 8.8;
-            ref(2,flage) = 8.8 - j;
+            ref(1,flage) = 3.62;
+            ref(2,flage) = 3.62 - j;
             flage = flage + 1;
         elseif i ==4
-            ref(1,flage) = 8.8 - j;
+            ref(1,flage) = 3.62 - j;
             ref(2,flage) = 0;
             flage = flage + 1;
         end
 
     end
-    for j = 1:0.01:7.8
+    for j = 0.87:0.01:2.75
         if i == 1
-           inw(1,flage1) = 1;
+           inw(1,flage1) = 0.87;
            inw(2,flage1) = j;
            flage1 = flage1 + 1;
         elseif i == 2 
             inw(1,flage1) = j;
-            inw(2,flage1) = 7.8;
+            inw(2,flage1) = 2.75;
             flage1 = flage1 + 1;
         elseif i ==3
-            inw(1,flage1) = 7.8;
-            inw(2,flage1) = 7.8 - j + 1;
+            inw(1,flage1) = 2.75;
+            inw(2,flage1) = 2.75 - j + 0.87;
             flage1 = flage1 + 1;
         elseif i ==4
-            inw(1,flage1) = 7.8 - j + 1;
-            inw(2,flage1) = 1;
+            inw(1,flage1) = 2.75 - j + 0.87;
+            inw(2,flage1) = 0.87;
             flage1 = flage1 + 1;
         end
     end
-    for j = -1:0.01:9.8
+    for j = -0.87:0.01:4.49
         if i == 1
-           ouw(1,flage2) = -1;
+           ouw(1,flage2) = -0.87;
            ouw(2,flage2) = j;
            flage2 = flage2 + 1;
         elseif i == 2 
             ouw(1,flage2) = j;
-            ouw(2,flage2) = 9.8;
+            ouw(2,flage2) = 4.49;
             flage2 = flage2 + 1;
         elseif i ==3
-            ouw(1,flage2) = 9.8;
-            ouw(2,flage2) = 9.8 - j - 1;
+            ouw(1,flage2) = 4.49;
+            ouw(2,flage2) = 4.49 - j - 0.87;
             flage2 = flage2 + 1;
         elseif i ==4
-            ouw(1,flage2) = 9.8 - j - 1;
-            ouw(2,flage2) = -1;
+            ouw(1,flage2) = 4.49 - j - 0.87;
+            ouw(2,flage2) = -0.87;
             flage2 = flage2 + 1;
         end
     end
@@ -513,11 +532,11 @@ for  j = 1:length(position)
         %----------------------------------------------
     end
     position = location;    
-    figure(2)
-    plot3(position(1,:),position(2,:),position(3,:),'ro-'),axis equal,grid on;
-     xlabel('x')
-     ylabel('y')
-     zlabel('z')
+%     figure(2)
+%     plot3(position(1,:),position(2,:),position(3,:),'ro-'),axis equal,grid on;
+%      xlabel('x')
+%      ylabel('y')
+%      zlabel('z')
     RTSUM = [1,0,0;
             0,1,0;
             0,0,1];
@@ -585,11 +604,11 @@ D2_matrix = position;
 
 % 2D projection
 [D2_matrix] = matrixProjection(D2_matrix,1);
-figure(3)
-plot(D2_matrix(1,:),D2_matrix(2,:),'bo-'),axis equal,grid on, hold on;
-plot(ref(1,:),ref(2,:),'-','Color','b','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
-plot(inw(1,:),inw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
-plot(ouw(1,:),ouw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
+% figure(3)
+% plot(D2_matrix(1,:),D2_matrix(2,:),'bo-'),axis equal,grid on, hold on;
+% plot(ref(1,:),ref(2,:),'-','Color','b','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
+% plot(inw(1,:),inw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
+% plot(ouw(1,:),ouw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
 
 % work out the 2D displacement information
 displacement = calculateDisplacement(D2_matrix);
@@ -675,21 +694,21 @@ end
     theta = theta * (pi/180);
     rot = [cos(theta),sin(theta);
          -sin(theta), cos(theta)];
-     figure(9)
-     D2_pos = rot * D2_pos;
-     point = rot * point;
-     plot(ref(1,:),ref(2,:),'-','Color','b','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
-     plot(inw(1,:),inw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
-     plot(ouw(1,:),ouw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
-     plot(D2_pos(1,:),D2_pos(2,:),'ro-'),axis equal,hold on;
-     plot(point(1,:),point(2,:),'r.'),axis equal,hold on;
-     figure(8)
-     plot(D2_pos(1,:),D2_pos(2,:),'ro-'),axis equal,hold on;
-     plot(ref(1,:),ref(2,:),'-','Color','b','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
-     plot(inw(1,:),inw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
-     plot(ouw(1,:),ouw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
-    [aRMS,aDistance] = evaluate(ref,D2_pos);
-    [aWallRMS,~] = evaluate (wall,point);
+%      figure(9)
+%      D2_pos = rot * D2_pos;
+%      point = rot * point;
+%      plot(ref(1,:),ref(2,:),'-','Color','b','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
+%      plot(inw(1,:),inw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
+%      plot(ouw(1,:),ouw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
+%      plot(D2_pos(1,:),D2_pos(2,:),'ro-'),axis equal,hold on;
+%      plot(point(1,:),point(2,:),'r.'),axis equal,hold on;
+%      figure(8)
+%      plot(D2_pos(1,:),D2_pos(2,:),'ro-'),axis equal,hold on;
+%      plot(ref(1,:),ref(2,:),'-','Color','b','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
+%      plot(inw(1,:),inw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
+%      plot(ouw(1,:),ouw(2,:),'-','Color','k','MarkerSize',5,'MarkerFaceColor','#D9FFFF'),axis equal,hold on
+%     [aRMS,aDistance] = evaluate(ref,D2_pos);
+%     [aWallRMS,~] = evaluate (wall,point);
    
     
 %     startPoint = 1;
